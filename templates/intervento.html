@@ -1,0 +1,83 @@
+{% extends 'base.html' %}{% load staticfiles %}
+
+
+{% block content %}
+
+<div class="container mt150">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>{{ intervento.titolo_intervento }}</h1>
+        </div>
+        <div class="col-md-6">
+            <p class="anno">Anno {{ intervento.anno|date:'Y' }}</p>
+        </div>
+    </div>
+</div>
+{% if intervento.thumb_active %}
+<div class="container-fluid">
+    <div class="slide" style='
+        margin-top: 30px;
+        background-image: url("../../media/{{ intervento.thumb_intervento }}");
+        height: 600px;
+        background-size: cover;
+        background-position: top;
+        background-repeat: no-repeat;'>
+    </div>
+</div>
+{% else %}
+{% endif %}
+<div class="container mt60">
+    {% if intervento.info_active %}
+    <div class="row">
+        <div class="col-md-12">
+            <p class="blue">INFO PROGETTO</p>
+        </div>
+        {% if intervento.inizio_lavori_active %}<div class="col-md-3"><p>Inizio lavori: <span style="color: #999999;">{{ intervento.inizio_lavori }}</span></p></div>{% else %}{% endif %}
+        {% if intervento.fine_lavori_active %}<div class="col-md-3"><p>Fine lavori: <span style="color: #999999;">{{ intervento.fine_lavori }}</span></p></div>{% else %}{% endif %}
+        {% if intervento.committente_active %}<div class="col-md-3"><p>Committente: <span style="color: #999999;">{{ intervento.committente }}</span></p></div>{% else %}{% endif %}
+        {% if intervento.commercializzazione_active %}<div class="col-md-3"><p>Commercializzazione: <span style="color: #999999;">{{ intervento.commercializzazione }}</span></p></div>{% else %}{% endif %}
+        {% if intervento.url_committente_active %}<div class="col-md-3"><p>Url committente: <span style="color: #999999;">{{ intervento.url_committente }}</span></p></div>{% else %}{% endif %}
+        {% if intervento.sito_intervento_active %}<div class="col-md-3"><p>Sito intervento: <span style="color: #999999;">{{ intervento.sito_intervento }}</span></p></div>{% else %}{% endif %}
+        {% if intervento.impresa_active %}<div class="col-md-3"><p>Impresa: <span style="color: #999999;">{{ intervento.impresa }}</span></p></div>{% else %}{% endif %}
+        {% if intervento.strutture_active %}<div class="col-md-3"><p>Strutture: <span style="color: #999999;">{{ intervento.strutture }}</span></p></div>{% else %}{% endif %}
+        {% if intervento.impianti_active %}<div class="col-md-3"><p>Impianti: <span style="color: #999999;">{{ intervento.impianti }}</span></p></div>{% else %}{% endif %}
+        {% if intervento.progetto_del_verde_active %}<div class="col-md-3"><p>Progetto del verde: <span style="color: #999999;">{{ intervento.progetto_del_verde }}</span></p></div>{% else %}{% endif %}
+        {% if intervento.video_active %}<div class="col-md-3"><p>Video intervento: <span style="color: #999999;">{{ intervento.video }}</span></p></div>{% else %}{% endif %}
+    </div>
+    <div class="row mt60">
+        <div class="col-md-12">
+            <p class="blue">DESCRIZIONE PROGETTO</p>
+        </div>
+        <div class="col-md-12">
+            <p>{{ intervento.descrizione }}</p>
+        </div>
+    </div>
+    {% else %}
+    {% endif %}
+    {% if intervento.photo_active %}
+    <div class="row mt60">
+        <div class="col-md-12">
+            <p class="blue">FOTO PROGETTO</p>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-columns">
+            {% for photo in photo_upload  %}
+                <div class="card">
+                    <a data-fancybox="gallery" href="../../media/{{ photo.photo }}"><img class="card-img" src="../../media/{{ photo.photo }}"></a>
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% else %}
+    {% endif %}
+</div>
+
+{% endblock %}
+
+
+

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt150">
+    {% if projects_titolo %}
+        <!--<p>Trovati {{ projects_titolo|length }} progetti{{ projects_titolo|pluralize }}</p>-->
+
+        <p class="mb30">Risultati ricerca per: <strong>{{ query }}</strong></p>
+
+        <div class="mt60">
+            {% for intervento in projects_titolo %}
+            <div class="row">
+                <div class="col-md-10">
+                    <p style="margin: 0px;"><a href="{% url 'intervento_detail' slug=intervento.slug id=intervento.id %}">{{ intervento.titolo_intervento }}</a></p>
+                    <p style="margin: 0px;"><small>Anno: {{ intervento.anno|date:'Y' }}</small></p>
+                    <p style="margin: 0px;"><small>Commercializzazione: {{ intervento.commercializzazione }}</small></p>
+                </div>
+            </div>
+            <hr>
+            {% endfor %}
+        </div>
+
+    {% else %}
+        <p>Nessun progetto trovato con questa ricerca: <strong>{{ query }}</strong></p>
+    {% endif %}
+    </div>
+{% endblock %}

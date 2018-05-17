@@ -1,0 +1,274 @@
+{% extends 'base.html' %}{% load staticfiles %}
+
+
+{% block content %}
+
+<script type="text/javascript">
+    window.onload=function(){
+
+    var gmarkers1 = [];
+    var markers1 = [];
+    var infowindow = new google.maps.InfoWindow({
+        content: ''
+    });
+
+    // Our markers
+    markers1 = [
+        {% for intervento in interventi %}
+        ['{{ forloop.counter0}}', '{{ intervento.titolo_intervento }}', {{ intervento.latitudine }},{{ intervento.longitudine }}, '{{ intervento.categoria }}'],
+        {% endfor %}
+    ];
+
+    var infoWindowContent = [
+        {% for intervento in interventi %}
+            ['<strong><a href="{% url 'intervento_detail' slug=intervento.slug id=intervento.id %}">{{ intervento.titolo_intervento }}</a></strong>'],
+        {% endfor %}
+    ];
+
+    /**
+     * Function to init map
+     */
+
+    function initialize() {
+        var center = new google.maps.LatLng(45.4642035, 9.189981999999986);
+        var bounds = new google.maps.LatLngBounds();
+        var mapOptions = {
+            zoom: 11,
+            center: center,
+            scrollwheel: false,
+            navigationControl: false,
+            mapTypeControl: false,
+            scaleControl: false,
+            streetViewControl: false,
+            //apTypeId: google.maps.MapTypeId.TERRAIN,
+            styles:
+        [
+          {
+            "featureType": "administrative.land_parcel",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "administrative.neighborhood",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "poi",
+            "elementType": "labels.text",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "poi.business",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "poi.park",
+            "stylers": [
+              {
+                "color": "#c6ecb5"
+              },
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "road",
+            "elementType": "labels",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "road",
+            "elementType": "labels.icon",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "road.arterial",
+            "elementType": "labels",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "road.highway",
+            "elementType": "labels",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "road.local",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "transit",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "water",
+            "elementType": "labels.text",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          }
+        ]
+    };
+
+        map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+        for (i = 0; i < markers1.length; i++) {
+            addMarker(markers1[i]);
+        }
+    }
+
+    /**
+     * Function to add marker to map
+     */
+
+    function addMarker(marker) {
+        var category = marker[4];
+        var title = marker[1];
+        var pos = new google.maps.LatLng(marker[2], marker[3]);
+        var content = marker[1];
+
+        marker1 = new google.maps.Marker({
+            title: title,
+            position: pos,
+            category: category,
+            map: map,
+            icon: {
+		        url: "http://127.0.0.1:8000/static/img/pin.svg",
+		        scaledSize: new google.maps.Size(44, 44)
+	        },
+        });
+
+        gmarkers1.push(marker1);
+
+        // Marker click listener
+        google.maps.event.addListener(marker1, 'click', (function (marker1, i) {
+            return function () {
+                console.log('Gmarker 1 gets pushed');
+                infowindow.setContent(infoWindowContent[i][0]);
+                infowindow.open(map, marker1);
+                //map.panTo(this.getPosition());
+                map.setZoom(11);
+            }
+        })(marker1, i));
+    }
+
+    /**
+     * Function to filter markers by category
+     */
+
+    filterMarkers = function (category) {
+        for (i = 0; i < markers1.length; i++) {
+            marker = gmarkers1[i];
+            // If is same category or category not picked
+            if (marker.category == category || category.length === 0) {
+                marker.setVisible(true);
+            }
+            // Categories don't match
+            else {
+                marker.setVisible(false);
+            }
+        }
+    }
+
+    // Init map
+    initialize();
+
+    }
+
+
+
+
+    </script>
+
+
+    <div id="map-canvas"></div>
+
+    <div class="filter-item">
+
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                    <img src="{% static 'img/filter.svg' %}" height="20px">
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="padding: 15px;">
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="customRadio1" name="customRadio" value="" class="custom-control-input" onchange="filterMarkers(this.value);">
+                        <label class="custom-control-label" for="customRadio1">Tutte</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="customRadio2" name="customRadio" value="residenziale" class="custom-control-input" onchange="filterMarkers(this.value);">
+                        <label class="custom-control-label" for="customRadio2">Residenziale</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="customRadio3" name="customRadio" value="hotel" class="custom-control-input" onchange="filterMarkers(this.value);">
+                        <label class="custom-control-label" for="customRadio3">Hotel</label>
+                    </div>
+
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="customRadio4" name="customRadio" value="commerciale" class="custom-control-input" onchange="filterMarkers(this.value);">
+                        <label class="custom-control-label" for="customRadio4">Commerciale</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="customRadio5" name="customRadio" value="interni" class="custom-control-input" onchange="filterMarkers(this.value);">
+                        <label class="custom-control-label" for="customRadio5">Interni</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="customRadio6" name="customRadio" value="ville" class="custom-control-input" onchange="filterMarkers(this.value);">
+                        <label class="custom-control-label" for="customRadio6">Ville</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="customRadio7" name="customRadio" value="ristrutturazione" class="custom-control-input" onchange="filterMarkers(this.value);">
+                        <label class="custom-control-label" for="customRadio7">Ristrutturazione</label>
+                    </div>
+                </div>
+            </li>
+        </ul>
+
+
+    </div>
+
+
+{% endblock %}
+
+
+
