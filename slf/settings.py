@@ -25,7 +25,7 @@ SECRET_KEY = 'pq)xcd@z#(rl1oajz%x$aec2f&t39^9!+i%mpkas8=ze+5)$wz'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['snippetcode.pythonanywhere.com']
+ALLOWED_HOSTS = ['snippetcode.pythonanywhere.com', '127.0.0.1']
 
 
 # Application definition
