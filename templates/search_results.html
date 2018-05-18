@@ -22,7 +22,7 @@
                 <p>Risultati ricerca per: <strong>{{ query }}</strong></p>
             </div>
             <div class="col-md-6">
-                <p style="margin: 0px; cursor: pointer" class="anno" onClick="OpenAndCloseSidebar()">Filtra</p>
+                <p style="margin: 0px; cursor: pointer" class="anno" onClick="OpenAndCloseSidebar()"><img src="{% static 'img/filter.svg' %}" height="20px"></p>
             </div>
         </div>
     </div>
@@ -51,7 +51,7 @@
             {% for intervento in projects_titolo %}
             <div class="row">
                 <div class="col-md-12">
-                    <div class="card search-card filterDiv {{ intervento.categoria }}">
+                    <div class="animated fadeIn card search-card filterDiv {{ intervento.categoria }}">
                         <a href="{% url 'intervento_detail' slug=intervento.slug id=intervento.id %}">
                         <div class="card-body card-body-search">
                             <p style="margin: 0px;">{{ intervento.titolo_intervento }}</p>
